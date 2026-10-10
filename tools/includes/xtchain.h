@@ -45,8 +45,13 @@
 #define SECTOR_SIZE     512
 #define _T(x)           x
 
+#ifndef YAML_MAX_BINARY
 #define YAML_MAX_BINARY (64u * 1024u * 1024u)
+#endif
 #define YAML_MAX_TEXT (512u * 1024u * 1024u)
+#ifndef YAML_MAX_DEPTH
+#define YAML_MAX_DEPTH 32
+#endif
 
 typedef struct MBR_PARTITION {
     uint8_t BootFlag;       // 0x80 = bootable, 0x00 = non-boot
@@ -323,7 +328,7 @@ YamlAppendBuffer(YAML_BUFFER *b,
 {
     if(n > YAML_MAX_BINARY || b->len > YAML_MAX_BINARY - n)
     {
-        YamlError("binary exceeds 64 MiB");
+        YamlError("binary exceeds %zu bytes", (size_t)YAML_MAX_BINARY);
     }
     if(b->len + n > b->cap)
     {
@@ -385,7 +390,7 @@ inline
 uint32_t
 ReadUInt32(const unsigned char *p)
 {
-    return ReadUInt16(p) | (ReadUInt16(p + 2) << 16);
+    return ReadUInt16(p) | ((uint32_t)ReadUInt16(p + 2) << 16);
 }
 
 static
@@ -1115,9 +1120,9 @@ inline
 void
 YamlParserDepthCheck(unsigned depth)
 {
-    if(depth > 32)
+    if(depth > YAML_MAX_DEPTH)
     {
-        YamlError("YAML nesting exceeds 32 levels");
+        YamlError("YAML nesting exceeds %u levels", (unsigned)YAML_MAX_DEPTH);
     }
 }
 

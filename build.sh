@@ -31,7 +31,7 @@ CMAKEVCS="https://gitlab.kitware.com/cmake/cmake.git"
 
 # LLVM Settings
 LLVMDIR="${SRCDIR}/llvm"
-LLVMTAG="llvmorg-23.1.2"
+LLVMTAG="llvmorg-23.1.3"
 LLVMVCS="https://github.com/llvm/llvm-project.git"
 
 # Mtools Settings
@@ -408,7 +408,7 @@ xtchain_build()
     echo ">>> Building XTchain tools ..."
     mkdir -p ${BINDIR}/bin
     mkdir -p ${BINDIR}/lib/xtchain
-    for EXEC in bin2c diskimg exetool xtadkgen xtcspecc xtnlsc; do
+    for EXEC in bin2c diskimg exetool mkxthv xtadkgen xtcspecc xtnlsc; do
         if [ ! -e ${BINDIR}/bin/${EXEC} ]; then
             ${CCOMPILER} -I${WRKDIR}/tools/includes ${WRKDIR}/tools/${EXEC}.c -o ${BINDIR}/bin/${EXEC}
         fi
